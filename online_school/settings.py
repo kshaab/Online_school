@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "users",
     "lms",
-    "rest_framework_simplejwt"
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -107,7 +107,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
-    ]
+    ],
 }
 
 SIMPLE_JWT = {
