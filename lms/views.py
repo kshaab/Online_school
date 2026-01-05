@@ -103,6 +103,3 @@ class SubscriptionCreateApiView(generics.CreateAPIView):
             Subscription.objects.create(owner=user, course=course_item)
             message = "Подписка добавлена"
             return Response({"message": message}, status=status.HTTP_201_CREATED)
-
-
-
