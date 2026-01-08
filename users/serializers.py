@@ -7,7 +7,7 @@ from users.models import Payments, User
 class PaymentsSerializer(ModelSerializer):
     class Meta:
         model = Payments
-        fields = "__all__"
+        fields = ("payment_date", "payment_amount", "payment_method")
 
 
 class UserCreateSerializer(ModelSerializer):
@@ -18,7 +18,11 @@ class UserCreateSerializer(ModelSerializer):
         fields = ("email", "password", "phone_number", "town")
 
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        password = validated_data.pop("password")
+        user = User(**validated_data)
+        user.set_password(password)
+        user.is_active = True
+        user.save()
         return user
 
 
