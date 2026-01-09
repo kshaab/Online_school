@@ -6,7 +6,8 @@ from online_school.settings import STRIPE_API_KEY
 
 stripe.api_key = STRIPE_API_KEY
 
-def create_stripe_product(name:str) -> dict:
+
+def create_stripe_product(name: str) -> dict:
     """Создает продукт в страйпе."""
     return stripe.Product.create(name=name)
 
@@ -29,3 +30,11 @@ def create_stripe_session(price: str) -> Tuple[Optional[str], Optional[str]]:
     )
     return session.get("id"), session.get("url")
 
+
+def retrieve_stripe_session(session_id: str) -> Optional[dict]:
+    """Проверяет статус сессии в страйпе."""
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        return session
+    except stripe.error.InvalidRequestError:
+        return None

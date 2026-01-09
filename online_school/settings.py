@@ -109,7 +109,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 SIMPLE_JWT = {
@@ -122,7 +122,6 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Educational courses on the online school platform",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
-
 }
 
 STRIPE_API_KEY = os.getenv("STRIPE_API_KEY")
