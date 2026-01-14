@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -13,11 +15,13 @@ class CourseSerializer(ModelSerializer):
         model = Course
         fields = "__all__"
 
-    def get_lessons(self, obj):
+    def get_lessons(self, obj: Course) -> List[Dict]:
+        """Возвращает список уроков для курса."""
         queryset = obj.lesson_set.all()
         return LessonSerializer(queryset, many=True).data
 
-    def get_is_subscribe(self, obj):
+    def get_is_subscribe(self, obj: Course) -> bool:
+        """Проверяет есть ли подписка у пользователя."""
         user = self.context["request"].user
         if not user.is_authenticated:
             return False
@@ -39,5 +43,12 @@ class CourseDetailSerializer(ModelSerializer):
         model = Course
         fields = ("name", "count_lessons", "lessons")
 
-    def get_count_lessons(self, obj):
+    def get_count_lessons(self, obj: Course) -> int:
+        """Считает количество уроков в курсе."""
         return obj.lesson_set.count()
+
+
+class SubscriptionSerializer(ModelSerializer):
+    class Meta:
+        model = Subscription
+        fields = "__all__"

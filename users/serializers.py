@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 from rest_framework.fields import CharField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -7,7 +9,7 @@ from users.models import Payments, User
 class PaymentsSerializer(ModelSerializer):
     class Meta:
         model = Payments
-        fields = ("payment_date", "payment_amount", "payment_method")
+        fields = "__all__"
 
 
 class UserCreateSerializer(ModelSerializer):
@@ -17,7 +19,8 @@ class UserCreateSerializer(ModelSerializer):
         model = User
         fields = ("email", "password", "phone_number", "town")
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, Any]) -> User:
+        """Создает пользователя."""
         password = validated_data.pop("password")
         user = User(**validated_data)
         user.set_password(password)
@@ -39,7 +42,8 @@ class UserPrivateSerializer(ModelSerializer):
         model = User
         exclude = ("password",)
 
-    def get_payments(self, obj):
+    def get_payments(self, obj: User) -> Payments:
+        """Получает платежи пользователя."""
         queryset = Payments.objects.filter(user=obj)
         return PaymentsSerializer(queryset, many=True).data
 
