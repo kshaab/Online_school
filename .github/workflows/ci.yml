@@ -41,7 +41,7 @@ jobs:
       POSTGRES_DB: online_school
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      HOST: postgres
+      HOST: localhost
       PORT: 5432
       SECRET_KEY: testsecretkey
 
