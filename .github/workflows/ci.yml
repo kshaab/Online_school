@@ -23,6 +23,7 @@ jobs:
 
       - name: Run Flake8
         run: flake8 .
+
   test:
     needs: lint
     runs-on: ubuntu-latest
@@ -31,40 +32,51 @@ jobs:
       postgres:
         image: postgres:17
         env:
-          POSTGRES_DB: online_school
+          POSTGRES_DB: postgres
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: 123456
         ports:
           - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     env:
-      POSTGRES_DB: online_school
+      SECRET_KEY: testsecret
+      POSTGRES_DB: postgres
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: 123456
+      PGPASSWORD: 123456
       HOST: localhost
       PORT: 5432
-      SECRET_KEY: testsecretkey
+      DEBUG: "True"
 
     steps:
-    - name: Check out code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
+    - uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: "3.10"
 
-    - name: Install dependencies
+    - name: Install deps
       run: |
         pip install poetry
         poetry config virtualenvs.create false
         poetry install
 
-    - name: Run migrations
-      run: python manage.py migrate
+    - name: Wait for Postgres
+      run: |
+        until pg_isready -h localhost -p 5432; do
+          sleep 1
+        done
 
-    - name: Run tests
-      run: python manage.py test
+    - name: Migrate
+      run: poetry run python manage.py migrate
+
+    - name: Test
+      run: poetry run python manage.py test
 
   build:
     needs: test
