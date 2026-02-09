@@ -101,6 +101,6 @@ class PaymentsTestCase(APITestCase):
         url = reverse("users:payments-list")
         response = self.client.get(url)
         data = response.json()
-        result = [{"payment_date": "2026-01-05", "payment_amount": 10000.00, "payment_method": "credit_card"}]
+        result = [{"payment_date": "2025-01-25", "payment_amount": 10000.00, "payment_method": "credit_card"}]
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data, result)

@@ -13,13 +13,7 @@ class CourseSerializer(ModelSerializer):
 
     class Meta:
         model = Course
-        fields = (
-            "id",
-            "name",
-            "preview",
-            "description",
-            "owner"
-        )
+        fields = ("id", "name", "preview", "description", "owner", "lessons", "is_subscribe")
 
     def get_lessons(self, obj: Course) -> List[Dict]:
         """Возвращает список уроков для курса."""

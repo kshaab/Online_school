@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+from rest_framework import serializers
 from rest_framework.fields import CharField, SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
@@ -7,13 +8,11 @@ from users.models import Payments, User
 
 
 class PaymentsSerializer(ModelSerializer):
+    payment_amount = serializers.FloatField()
+
     class Meta:
         model = Payments
-        fields = (
-            "payment_date",
-            "payment_amount",
-            "payment_method"
-        )
+        fields = ("payment_date", "payment_amount", "payment_method")
 
 
 class UserCreateSerializer(ModelSerializer):
