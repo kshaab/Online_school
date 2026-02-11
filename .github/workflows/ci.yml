@@ -100,21 +100,13 @@ jobs:
     needs: build
 
     steps:
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.9.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_KEY }}
+      - name: Deploy
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > key
+          chmod 600 key
 
-    - name: Debug SSH key fingerprint
-      run: |
-        echo "${{ secrets.SSH_KEY }}" > key
-        chmod 600 key
-        ssh-keygen -lf key
-
-    - name: Deploy to Server
-      run: |
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
-          cd ${{ secrets.DEPLOY_DIR }}
-          docker compose pull
-          docker compose up -d --build
-        EOF
+          ssh -i key -o StrictHostKeyChecking=no kshaab@${{ secrets.SERVER_IP }} << 'EOF'
+            cd ${{ secrets.DEPLOY_DIR }}
+            docker compose pull
+            docker compose up -d --build
+          EOF
